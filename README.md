@@ -16,7 +16,7 @@ sudo apt-get install mysql-server
 
 # Connecting to My SQL Database
 
-mysql -h mysqldb2022.cqyjl3sbn0g1.us-west-2.rds.amazonaws.com -u admin -p
+mysql -h ENDPOINT -u admin -p
 
 # Create Database
 Create database customers;
@@ -131,11 +131,11 @@ sudo git add .
 
 sudo git commit -m ""
 
-git remote set-url origin https://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@github.com/prashanthkatam/ltibloodbank.git
+git remote set-url origin https://TOKENKEY@github.com/prashanthkatam/ltibloodbank.git
 
-git remote set-url origin https://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@github.com/prashanthkatam/Hackathon.git
+git remote set-url origin https://TOKENKEY@github.com/prashanthkatam/Hackathon.git
 
-git remote set-url origin https://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@github.com/prashanthkatam/Hackathon.git
+git remote set-url origin https://TOKENKEY@github.com/prashanthkatam/Hackathon.git
 
 sudo git push origin master
 
@@ -197,6 +197,126 @@ sudo apt install git
 DELETE FROM Customers;
 
 show columns from donors;
+
+# Push Apache Logs to Cloud Watch
+
+1.	Create an EC2 Instance
+
+2.	Create a Role with CloudWatchAgentServerPolicy and attach to EC2 Instance.
+
+3.	Update the Instance
+
+sudo apt-get update
+
+4.	Install Apache2 or any other web server on the Ec2 Instance
+
+Sudo apt-get install apache2
+
+5.	Download the Package using wget
+
+sudo wget https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb
+
+6.	Install CloudWatch Agent 
+
+sudo dpkg -i -E ./amazon-cloudwatch-agent.deb
+
+7.	Create configuration 
+
+cd /opt/aws/amazon-cloudwatch-agent/bin/config.json
+
+{
+     "agent": {
+         "run_as_user": "root"
+     },    
+     "logs": {
+         "logs_collected": {
+             "files": {
+                 "collect_list": [
+                     {
+                         "file_path": "/opt/myapp.log",
+                         "log_group_name": "myapp-error-log",
+                         "log_stream_name": "{instance_id}"
+                     }
+                 ]
+             }
+         }
+     }
+
+
+8.	Command to Start CloudWatch Service
+
+sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:/opt/aws/amazon-cloudwatch-agent/bin/config.json -s
+
+9.	Now Navigate the AWS Cosole and go to Cloud Watch you can see the log group as mentioned in the config.json and the logs will be flown as the path given in config.json
+
+
+# Create a CI CD Pipeline using Jenkins, EC2, Github
+
+
+1.	First Create an EC2 Instance in the AWS
+2.	SSH Into the EC2 Instance and follow the following steps:
+•	sudo apt-get update
+•	sudo apt-get install openjdk-8-jdk
+•	wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add -
+•	sudo sh -c 'echo deb https://pkg.jenkins.io/debian-stable binary/ /etc/apt/sources.list.d/jenkins.list'
+•	sudo apt-get update
+•	sudo apt-get install Jenkins
+•	sudo systemctl status Jenkins
+•	sudo apt install git
+3.	After Installing Jenkins open the Jenkins by copying the EC2 Instance IP:8080 and once you open webpage it will ask for the password which will be available on location shown in page
+4.	After that the Jenkins will recommend us to download some packages which are used, click on the suggested Packages, then the packages will get installed, once installed it will ask for username password etc.,
+5.	After that the Jenkins will be logged in, then we need to install GitHub Integration Extension Package, and then restart the Jenkins
+6.	After restart then open github, create a repository or use existing repository and push some sample code like index.php to the repository
+7.	Then next we need to enable webhook, so that it will notice the recent changes done in repository, then it will be used as connection point.
+8.	Now Create a Pipeline :
+•	Click on New Item
+•	Enter Name of Item
+•	Click Free Style Project and Click on OK
+•	Don’t choose anything in description
+•	Select Source Code Management as Git and paste git URL
+•	Then go to build and add build step Execute Shell
+•	Then enter ls or [pwd]
+•	Click on Apply and save
+•	Then select Job and click on Build now
+•	It will successfully execute and build also gets successful, once it is done, we can see logs where we can see pwd of the project 
+
+/var/lib/jenkins/workspace/prashproject
+
+
+9.	Once the POC or Example is done we can now click on Job and click on Configure, and then tick checkbox GitHub hook trigger for GITScm polling
+10.	Add Script as 
+ls
+pwd
+cp -r /var/lib/jenkins/workspace/prashproject/* /var/www/html/
+
+11.	Now Make Changes in GitHub and Come to Jenkins and click on Job and then Click on Build now, then the New Code will be copied to /var/lib/jenkins/workspace/prashproject/* then as we have created a script in job, it will copy all the data from /var/lib/jenkins/workspace/prashproject/* to /var/www/html/
+12.	Thus, we can create a CI CD Pipeline.
+LAB 2
+
+1.	Add a new node (Slave) by clicking on manage Jenkins and then by clicking Manage Nodes and Clouds
+2.	Click on New Node and then give name of node, mark as Permanent Node and click on create
+3.	Then give name ,description, number of executors, remote directory root labels usage launch method and confirm use WebSocket click on save
+{NOTE: Disable WorkDir, use this node as much as possible, give root directory as /var/lib/Jenkins/  , Must use WebSocket}.
+4.	Now download Agent and then copy paste to Slave node amd then run command as shown in slave node form Jenkins, then it will be added and connected successfully.
+{NOTE: use & for running it in background}.
+5.	Now Create a New Job and Name it, then click in Free style project and then click ok, then restrict where this project can be run, and then click on Git as Source Code Management  and then paste GitHub Repository link and then select GitHub hook trigger for GITScm polling and then use add build step and select Execute Shell in it and then paste following commands:
+
+
+ls
+pwd
+cp -r /var/lib/jenkins/workspace/projectname/* /var/www/html/
+[The reason behind adding slave node is, when we make any changes in github for dev then if it success, now then only the change should be reflected to Production, here use project name after workspace path, so it copied files from /var/lib/Jenkins/workspace/projectname/*  to /var/www/html/]
+6.	Click on Save and apply
+7.	After creating First job for master as stated in lab1  and then as stated in lab 2, then go to configure of first job and click on post build actions and click on build other projects, select project Jenkinsslaveproj, and select trigger only if build is stable. Click on save.
+8.	Now Build the Job Here if the dev gets success, then prod will be changed.
+
+
+KEY POINTS
+1.	Create a job1 for master (dev), it doesn’t need adding node as the default is dev, Don’t select anything under Description,  then use git and paste git URL of Repository under Source Code Management, then select GitHub hook trigger for GITScm polling under Build Triggers,  Don’t select anything under Build Environment, Add Execute Shell under Build, paste cp from /var/lib/Jenkins/workspace/projectname/* to /var/www/html/
+2.	Create a node as stated in LAB 2
+3.	Create job2 and then select Restrict where this project can be run under Description and select ,  then use git and paste git URL of Repository under Source Code Management, then select GitHub hook trigger for GITScm polling under Build Triggers,  don’t select anything under Build Environment, Add Execute Shell under Build, paste cp from /var/lib/Jenkins/workspace/projectname/* to / var/www/html/
+4.	Then click on job1 and click on configure for editing, and just add post build actions and click on build other projects, select project Jenkinsslaveproj, and select trigger only if build is stable. Click on save.
+5.	Now Change code in GitHub, then the change will trigger to dev and then if it is successful , then the changes will be reflected to Prod.
 
 
 <html>
