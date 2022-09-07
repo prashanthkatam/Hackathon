@@ -66,7 +66,7 @@ INSERT INTO `users` (`username`, `name`, `password`) VALUES
 ('prashanth', 'Prashanth Katkam', '12345');
 
 
-#Admin Table
+# Admin Table
 
 CREATE TABLE `admin` (
   `username` varchar(80) NOT NULL,
@@ -74,7 +74,7 @@ CREATE TABLE `admin` (
   `password` varchar(80) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-#insert into admin table
+# insert into admin table
 
 INSERT INTO `admin` (`username`, `name`, `password`) VALUES
 ('admin', 'admin', '12345');
@@ -85,7 +85,7 @@ INSERT INTO `admin` (`username`, `name`, `password`) VALUES
 if connection from linux ec2 to DB is not connecting, then add inbound rule to DB SG as AURORA and assign SG of EC2 Instance.
 
 
-#DB Endpoint needs to be added
+# DB Endpoint needs to be added
 
 vi donate-blood.php
 vi find-donor.php
