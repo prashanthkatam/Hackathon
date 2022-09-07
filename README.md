@@ -213,13 +213,15 @@ vi /opt/aws/amazon-cloudwatch-agent/bin/config.json
              }
          }
      }
-
+}
 
 8.	Command to Start CloudWatch Service
 
 sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:/opt/aws/amazon-cloudwatch-agent/bin/config.json -s
 
 9.	Now Navigate the AWS Cosole and go to Cloud Watch you can see the log group as mentioned in the config.json and the logs will be flown as the path given in config.json
+
+[NOTE: Check for the config.json syntax for the brackets, Create and assign CloudWatchAgentServerPolicy to Instance]
 
 --------------------------------------------------------------------------------------------------------------------
 
