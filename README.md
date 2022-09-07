@@ -12,17 +12,11 @@ sudo systemctl restart apache2
 
 sudo apt-get install mysql-server
 
-# Important Notes To Remember
 
-Add Endpoint URL of the DB to the congig.php and also for the pages which need the DB Details
-
-If the Database or Table name is changes please change it accordingly.
-
-Example: Donate-blood.php, Find-donor.php, config.php, signup.php, index.php {login}, 
 
 # Connecting to My SQL Database
 
-mysql -h mysqldb2022.ckgolaegfzzq.us-west-2.rds.amazonaws.com -u admin -p
+mysql -h mysqldb2022.cqyjl3sbn0g1.us-west-2.rds.amazonaws.com -u admin -p
 
 # Create Database
 Create database customers;
@@ -34,23 +28,7 @@ use customers;
 # Create table 
 create table donors(id int AUTO_INCREMENT primary key, fname varchar(255) NOT NULL , lname varchar(255) NOT NULL , mobileno BIGINT UNIQUE, city varchar(255) NOT NULL, bfrom date, bto date, dob date, bloodgroup varchar(255) NOT NULL);
 
-
-
-# Create table and assign Values for Signin/Login
-
-CREATE TABLE `users` (
-  `username` varchar(80) NOT NULL,
-  `name` varchar(80) NOT NULL,
-  `password` varchar(80) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-
-    INSERT INTO `users` (`username`, `name`, `password`) VALUES
-    ('yssyogesh', 'Yogesh Singh', '12345'),
-    ('bsonarika', 'Sonarika Bhadoria', '12345'),
-    ('vishal', 'Vishal Sahu', '12345'),
-    ('prashanth', 'Prashanth Katkam', '12345'),
-    ('vijay', 'Vijay mourya', '12345');
+# Insert Values to donors table
 
 INSERT INTO `donors` (`fname`, `lname`, `mobileno`, `city`, `bfrom`, `bto`, `dob`, `bloodgroup`) VALUES
 ('Srikanth', 'Koraveni', '9000736060', 'Pune', '2022-09-28', '2022-12-28', '1998-05-22', 'O_Positive'),
@@ -63,6 +41,50 @@ INSERT INTO `donors` (`fname`, `lname`, `mobileno`, `city`, `bfrom`, `bto`, `dob
 ('Zaheer', 'Khan', '7788678987', 'Chennai', '2022-09-11', '2022-12-19', '1998-11-11', 'A_Positive');
 
 
+# Create table users and assign Values for Signin/Login
+
+CREATE TABLE `users` (
+  `username` varchar(80) NOT NULL,
+  `name` varchar(80) NOT NULL,
+  `password` varchar(80) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+# Assign values to users table
+
+    INSERT INTO `users` (`username`, `name`, `password`) VALUES
+    ('yssyogesh', 'Yogesh Singh', '12345'),
+    ('bsonarika', 'Sonarika Bhadoria', '12345'),
+    ('vishal', 'Vishal Sahu', '12345'),
+    ('prashanth', 'Prashanth Katkam', '12345'),
+    ('vijay', 'Vijay mourya', '12345');
+    
+
+# Insert Single Values to a Table
+
+INSERT INTO `users` (`username`, `name`, `password`) VALUES
+('prashanth', 'Prashanth Katkam', '12345');
+
+
+#Admin Table
+
+CREATE TABLE `admin` (
+  `username` varchar(80) NOT NULL,
+  `name` varchar(80) NOT NULL,
+  `password` varchar(80) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+#insert into admin table
+
+INSERT INTO `admin` (`username`, `name`, `password`) VALUES
+('admin', 'admin', '12345');
+
+=================================================================================================
+                                #IMP Points
+-------------------------------------------------------------------------------------------------
+if connection from linux ec2 to DB is not connecting, then add inbound rule to DB SG as AURORA and assign SG of EC2 Instance.
+
+
 #DB Endpoint needs to be added
 
 vi donate-blood.php
@@ -72,10 +94,22 @@ vi search.php
 vi signup.php
 
 
-# Insert Single Values to a Table
+Add admin table name in indexadmin.php
 
-INSERT INTO `users` (`username`, `name`, `password`) VALUES
-('prashanth', 'Prashanth Katkam', '12345');
+Hackathon Repo consists of latest code
+
+# Important Notes To Remember
+
+Add Endpoint URL of the DB to the congig.php and also for the pages which need the DB Details
+
+If the Database or Table name is changes please change it accordingly.
+
+Example: donate-blood.php, find-donor.php, config.php, signup.php, search.php {login}.
+
+NOTE: Add donors table name to index.php and add admin table name to indexadmin.php
+
+===================================================================================================
+---------------------------------------------------------------------------------------------------
 
 # Git Commands
 
@@ -89,6 +123,8 @@ sudo git remote add origin "https://github.com/prashanthkatam/ltibloodbank.git"
 
 sudo git remote add origin "https://github.com/prashanthkatam/ltibloodbankrepo.git"
 
+sudo git remote add origin "https://github.com/prashanthkatam/Hackathon.git"
+
 sudo git remote -v
 
 sudo git add .
@@ -97,8 +133,9 @@ sudo git commit -m ""
 
 git remote set-url origin https://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@github.com/prashanthkatam/ltibloodbank.git
 
-git remote set-url origin https://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@github.com/prashanthkatam/ltibloodbankrepo.git
+git remote set-url origin https://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@github.com/prashanthkatam/Hackathon.git
 
+git remote set-url origin https://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@github.com/prashanthkatam/Hackathon.git
 
 sudo git push origin master
 
